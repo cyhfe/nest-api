@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   NotFoundException,
@@ -8,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.input';
+import { Prisma } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -25,6 +27,16 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() createDto: CreateUserDto) {
-    return this.usersServer.createUser(createDto);
+    const { username } = createDto;
+    try {
+      await this.usersServer.createUser(createDto);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new ConflictException(`${username} has been used`);
+        }
+      }
+      throw e;
+    }
   }
 }
