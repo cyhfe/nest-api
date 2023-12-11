@@ -16,13 +16,13 @@ export class UsersService {
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
-    const { id } = userWhereUniqueInput;
+    const { username } = userWhereUniqueInput;
     const found = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });
 
     if (!found) {
-      throw new NotFoundException(`User with ID "${id}" not found`);
+      throw new NotFoundException(`${username} not found`);
     }
 
     return found;
@@ -48,7 +48,7 @@ export class UsersService {
   async createUser(data: Prisma.UserCreateInput) {
     const { username, password } = data;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    console.log(hashedPassword);
+
     try {
       const created = await this.prisma.user.create({
         data: {

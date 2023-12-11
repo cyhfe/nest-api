@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class LoginDto {
+export class SignupInput {
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
