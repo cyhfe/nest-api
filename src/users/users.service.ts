@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -38,10 +42,24 @@ export class UsersService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({
-      data,
-    });
+  async createUser(data: Prisma.UserCreateInput) {
+    const { username } = data;
+    try {
+      const created = await this.prisma.user.create({
+        data,
+      });
+      return {
+        id: created.id,
+        username: created.username,
+      };
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new ConflictException(`${username} already exists`);
+        }
+      }
+      throw e;
+    }
   }
 
   async updateUser(params: {
