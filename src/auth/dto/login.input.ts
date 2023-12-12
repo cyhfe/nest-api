@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 
-export class SignupInput {
+export class LoginInput {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
