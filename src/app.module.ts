@@ -3,7 +3,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 @Module({
   imports: [
     PrismaModule.forRoot({
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
         ],
       },
     }),
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     TasksModule,
     UsersModule,
     AuthModule,
