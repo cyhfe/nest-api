@@ -1,7 +1,6 @@
 export interface SecurityConfig {
   expiresIn: string;
-  refreshIn: string;
-  bcryptSaltOrRound: string | number;
+  saltRounds: number;
 }
 export interface Config {
   security: SecurityConfig;
@@ -9,9 +8,8 @@ export interface Config {
 
 const config: Config = {
   security: {
-    expiresIn: '2m',
-    refreshIn: '7d',
-    bcryptSaltOrRound: 10,
+    expiresIn: '7d',
+    saltRounds: 10,
   },
 };
 

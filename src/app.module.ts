@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { TasksModule } from './tasks/tasks.module';
+
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -20,7 +20,6 @@ import configuration from './config/configuration';
       },
     }),
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
-    TasksModule,
     UsersModule,
     AuthModule,
   ],

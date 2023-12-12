@@ -14,10 +14,6 @@ import { SecurityConfig } from 'src/config/configuration';
     PrismaModule,
     PassportModule,
     UsersModule,
-    // JwtModule.register({
-    //   secret: ConfigService,
-    //   signOptions: { expiresIn: '5m' }, // e.g. 30s, 7d, 24h
-    // }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
         const securityConfig = configService.get<SecurityConfig>('security')!;

@@ -6,12 +6,19 @@ import {
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import * as bcrypt from 'bcrypt';
-
-const saltRounds = 10;
+import { ConfigService } from '@nestjs/config';
+import { SecurityConfig } from 'src/config/configuration';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
+
+  get saltRounds() {
+    return this.configService.get<SecurityConfig>('security')!.saltRounds;
+  }
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
@@ -47,7 +54,7 @@ export class UsersService {
 
   async createUser(data: Prisma.UserCreateInput) {
     const { username, password } = data;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
     try {
       const created = await this.prisma.user.create({
@@ -66,7 +73,7 @@ export class UsersService {
           throw new ConflictException(`${username} already exists`);
         }
       }
-      throw e;
+      throw new Error(e);
     }
   }
 
