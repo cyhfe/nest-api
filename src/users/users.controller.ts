@@ -2,6 +2,8 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.input';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/decorators/user.decorator';
+import { User as UserModel } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -9,8 +11,8 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  getAllUsers() {
-    console.log('all');
+  getAllUsers(@User() user: UserModel) {
+    console.log(user);
     return this.usersServer.users({});
   }
 
