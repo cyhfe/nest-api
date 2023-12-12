@@ -11,8 +11,6 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginInput } from './dto/login.input';
 import * as bcrypt from 'bcrypt';
 
-const saltRounds = 10;
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -45,5 +43,23 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign({ userId: user.id }),
     };
+  }
+
+  async validateUser(username: string, password: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`No user found for username: ${username}`);
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    return user;
   }
 }
