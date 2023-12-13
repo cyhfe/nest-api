@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
+RUN npm config set registry http://mirrors.cloud.tencent.com/npm/
 # Install app dependencies
 RUN npm install
 
