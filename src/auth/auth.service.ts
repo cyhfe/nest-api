@@ -59,7 +59,7 @@ export class AuthService {
       }
       return {
         user: {
-          username: user.id,
+          username: user.username,
           id: user.id,
         },
       };
