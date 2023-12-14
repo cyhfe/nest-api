@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.input';
+
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from 'src/decorators/user.decorator';
 import { User as UserModel } from '@prisma/client';
@@ -21,8 +21,8 @@ export class UsersController {
     return this.usersServer.user({ id });
   }
 
-  @Post()
-  async createUser(@Body() createDto: CreateUserDto) {
-    return this.usersServer.createUser(createDto);
-  }
+  // @Post()
+  // async createUser(@Body() createDto: CreateUserDto) {
+  //   return this.usersServer.createUser(createDto);
+  // }
 }

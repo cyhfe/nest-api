@@ -10,6 +10,8 @@ import { PrismaService } from 'nestjs-prisma';
 import { JwtService } from '@nestjs/jwt';
 import { LoginInput } from './dto/login.input';
 import * as bcrypt from 'bcrypt';
+import { AutoLoginInput } from './dto/autoLogin.input';
+import { JwtDto } from './dto/jwtDto';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +22,15 @@ export class AuthService {
   ) {}
 
   async signup(data: Prisma.UserCreateInput) {
-    return await this.usersService.createUser(data);
+    const user = await this.usersService.createUser(data);
+
+    return {
+      accessToken: this.jwtService.sign({ userId: user.id }),
+      user: {
+        username: user.username,
+        id: user.id,
+      },
+    };
   }
 
   async login(loginInput: LoginInput) {
@@ -30,7 +40,32 @@ export class AuthService {
 
     return {
       accessToken: this.jwtService.sign({ userId: user.id }),
+      user: {
+        username: user.username,
+        id: user.id,
+      },
     };
+  }
+
+  async autoLogin(data: AutoLoginInput) {
+    const { token } = data;
+    try {
+      const payload = (await this.jwtService.verifyAsync(token)) as JwtDto;
+      const user = await this.usersService.user({
+        id: payload.userId,
+      });
+      if (!user) {
+        throw new NotFoundException();
+      }
+      return {
+        user: {
+          username: user.id,
+          id: user.id,
+        },
+      };
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 
   async validateUser(username: string, password: string) {
