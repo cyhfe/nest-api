@@ -11,6 +11,9 @@ services:
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      # - type: bind
+      #   source: ./upload
+      #   target: /root/nest/upload
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:latest

@@ -11,6 +11,10 @@ services:
       - 3000:3000
     depends_on:
       - postgres
+    volumes:
+      - type: bind
+        source: /root/nest/upload
+        target: /app/upload
 
   postgres:
     image: postgres:15
