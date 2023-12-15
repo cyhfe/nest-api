@@ -43,7 +43,6 @@ export class UploadController {
           const destination = `./uploads/${user.id}`;
           const dir = existsSync(destination);
           console.log(dir);
-          // return callback(null, destBase + `/${user.id}`);
           return callback(null, destination);
         },
         filename: (req, file, callback) => {
