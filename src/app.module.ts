@@ -4,6 +4,7 @@ import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { UploadModule } from './upload/upload.module';
 import configuration from './config/configuration';
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import configuration from './config/configuration';
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     UsersModule,
     AuthModule,
+    UploadModule,
   ],
 })
 export class AppModule {}
