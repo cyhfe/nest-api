@@ -14,10 +14,10 @@ import {
   MulterModule,
 } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { join, extname } from 'node:path';
+import { join, extname, resolve } from 'node:path';
 import { User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { readdir } from 'node:fs/promises';
+import { readdir, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 
 // const storage = MulterModule.diskStorage({
@@ -40,9 +40,11 @@ export class UploadController {
       storage: diskStorage({
         destination: async (req, file, callback) => {
           const user = req.user as User;
-          const destination = `./uploads/${user.id}`;
-          const dir = existsSync(destination);
-          console.log(dir);
+          const destination = resolve(`./upload/${user.id}`);
+          const exists = existsSync(destination);
+          if (!exists) {
+            await mkdir(destination);
+          }
           return callback(null, destination);
         },
         filename: (req, file, callback) => {
