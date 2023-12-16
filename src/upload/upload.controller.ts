@@ -43,7 +43,7 @@ export class UploadController {
           const destination = resolve(`./upload/${user.id}`);
           const exists = existsSync(destination);
           if (!exists) {
-            await mkdir(destination);
+            await mkdir(destination, { recursive: true });
           }
           return callback(null, destination);
         },
